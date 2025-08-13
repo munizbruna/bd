@@ -268,7 +268,7 @@
             // Removendo 'mode: no-cors' para obter um erro real no console.
             fetch(scriptURL, {
                 method: 'POST',
-                // mode: 'no-cors', // REMOVIDO TEMPORARIAMENTE PARA DEBUG
+                mode: 'no-cors', // REMOVIDO TEMPORARIAMENTE PARA DEBUG
                 cache: 'no-cache',
                 headers: {
                     'Content-Type': 'application/json'
