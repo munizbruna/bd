@@ -261,18 +261,45 @@
             }
             saveBtn.disabled = true;
             saveStatus.innerText = "Salvando...";
-            fetch(scriptURL, { method: 'POST', body: JSON.stringify({ name: playerNameInput.value, score: score }), mode: 'no-cors' })
-                .then(() => {
+            
+            const dataToSave = { name: playerNameInput.value, score: score };
+
+            // **MUDANÇA IMPORTANTE AQUI**
+            // Removendo 'mode: no-cors' para obter um erro real no console.
+            fetch(scriptURL, {
+                method: 'POST',
+                // mode: 'no-cors', // REMOVIDO TEMPORARIAMENTE PARA DEBUG
+                cache: 'no-cache',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                redirect: 'follow', // Adicionado para seguir redirecionamentos do Google
+                body: JSON.stringify(dataToSave)
+            })
+            .then(response => {
+                // Se a resposta não for OK, lança um erro para ser pego pelo .catch()
+                if (!response.ok) {
+                    throw new Error(`Erro na resposta da rede: ${response.statusText}`);
+                }
+                return response.json(); // Tenta ler a resposta como JSON
+            })
+            .then(data => {
+                console.log('Resposta do script (POST):', data); // Log da resposta
+                if(data.result === "success"){
                     saveStatus.innerText = "Pontuação salva!";
                     saveForm.classList.add('hidden');
                     restartBtn.classList.remove('hidden');
                     fetchAndShowHighScores();
-                })
-                .catch(error => {
-                    saveStatus.innerText = "Erro ao salvar. Tente novamente.";
-                    console.error('Error!', error.message);
-                    saveBtn.disabled = false;
-                });
+                } else {
+                    throw new Error(data.error || 'Erro desconhecido no script.');
+                }
+            })
+            .catch(error => {
+                // Este erro agora será muito mais específico!
+                saveStatus.innerText = "Erro ao salvar. Verifique o console.";
+                console.error('Erro detalhado ao salvar:', error);
+                saveBtn.disabled = false;
+            });
         }
 
         function fetchAndShowHighScores() {
