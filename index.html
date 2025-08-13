@@ -1,282 +1,686 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mario DB World - Quiz de Banco de Dados</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        /* Estilo geral inspirado no New Super Mario Bros. */
-        body {
-            font-family: 'Press Start 2P', cursive;
-            background-color: #639BFF; /* Azul do céu do Mario */
-            color: #FFFFFF;
-            text-shadow: 2px 2px 4px #000000;
-            overflow-x: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
+      /* Estilo geral inspirado no New Super Mario Bros. */
+      body {
+        font-family: "Press Start 2P", cursive;
+        background-color: #639bff; /* Azul do céu do Mario */
+        color: #ffffff;
+        text-shadow: 2px 2px 4px #000000;
+        overflow-x: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 1rem;
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
 
-        /* Elementos decorativos */
-        .cloud {
-            background: white;
-            width: 120px;
-            height: 40px;
-            border-radius: 40px;
-            position: absolute;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-        .cloud::before, .cloud::after {
-            content: '';
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-        .cloud::before {
-            width: 60px;
-            height: 60px;
-            top: -30px;
-            left: 15px;
-        }
-        .cloud::after {
-            width: 80px;
-            height: 80px;
-            top: -45px;
-            right: 10px;
-        }
-        .cloud-1 {
-            top: 15%;
-            left: 10%;
-            transform: scale(1.2);
-            opacity: 0.9;
-        }
-        .cloud-2 {
-            top: 25%;
-            left: 75%;
-            transform: scale(0.9);
-        }
-        .cloud-3 {
-            top: 60%;
-            left: 5%;
-            transform: scale(0.7);
-            opacity: 0.8;
-        }
+      /* Elementos decorativos */
+      .cloud {
+        background: white;
+        width: 120px;
+        height: 40px;
+        border-radius: 40px;
+        position: absolute;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      }
+      .cloud::before,
+      .cloud::after {
+        content: "";
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      }
+      .cloud::before {
+        width: 60px;
+        height: 60px;
+        top: -30px;
+        left: 15px;
+      }
+      .cloud::after {
+        width: 80px;
+        height: 80px;
+        top: -45px;
+        right: 10px;
+      }
+      .cloud-1 {
+        top: 15%;
+        left: 10%;
+        transform: scale(1.2);
+        opacity: 0.9;
+      }
+      .cloud-2 {
+        top: 25%;
+        left: 75%;
+        transform: scale(0.9);
+      }
+      .cloud-3 {
+        top: 60%;
+        left: 5%;
+        transform: scale(0.7);
+        opacity: 0.8;
+      }
 
-        .castle {
-            width: 100%;
-            height: 100vh;
-            background-image: url('mario.gif');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: absolute;
-/*             bottom: 65px;
- */            left: 0%;
-            z-index: -1;
-        }
+      .castle {
+        width: 100%;
+        height: 100vh;
+        background-image: url("mario.gif");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: absolute;
+        /*             bottom: 65px;
+ */
+        left: 0%;
+        z-index: -1;
+      }
 
-        .deco-block { position: absolute; width: 40px; height: 40px; background-size: contain; z-index: 4; }
-      
-        .block-1 { top: 45%; left: 40%; }
-        .block-2 { top: 45%; left: calc(40% + 42px); }
-        .block-3 { top: 45%; left: calc(40% + 84px); }
-    
-        /* Container do Quiz */
-        .container { background-color: rgba(0, 0, 0, 0.7); border: 4px solid #000000; border-radius: 10px; padding: 2rem; box-shadow: 0 0 0 5px #FFFFFF, 0 0 0 10px #000000; max-width: 800px; width: 90%; z-index: 10; position: relative; }
+      .deco-block {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background-size: contain;
+        z-index: 4;
+      }
 
-        /* Botões */
-        .btn { font-family: 'Press Start 2P', cursive; color: #FFFFFF; cursor: pointer; transition: all 0.1s ease-in-out; border: 4px solid black; padding: 15px; border-radius: 8px; }
-        .btn:hover { filter: brightness(1.15); }
-        .btn:active { transform: translateY(3px); }
-        .btn:disabled { background-color: #888; cursor: not-allowed; filter: grayscale(1); }
-        .btn-green { background-color: #13B513; }
-        .btn-yellow { background-color: #FEC00F; color: #000; text-shadow: none; }
-        .btn-blue { background-color: #4A90E2; }
-        
-        /* Botões de Resposta */
-        .answer-btn { font-family: 'Roboto', sans-serif; font-weight: 700; text-shadow: none; color: #000000; background-color: #D3823E; display: block; width: 100%; text-align: center; margin-bottom: 0.75rem; font-size: 1rem; padding: 12px; }
-        .answer-btn.correct { background-color: #13B513; color: #FFFFFF;}
-        .answer-btn.wrong { background-color: #E53935; color: #FFFFFF;}
+      .block-1 {
+        top: 45%;
+        left: 40%;
+      }
+      .block-2 {
+        top: 45%;
+        left: calc(40% + 42px);
+      }
+      .block-3 {
+        top: 45%;
+        left: calc(40% + 84px);
+      }
 
-        .question-box { background-color: rgba(0, 0, 0, 0.3); border: 4px solid #000; padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 8px; }
-        
-        /* Formulário e Ranking */
-        #save-form input { font-family: 'Roboto', sans-serif; color: #000; padding: 10px; border-radius: 4px; border: 2px solid black; width: 100%; max-width: 300px; margin: 0 auto 1rem; }
-        #highscore-list { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 1rem; font-family: 'Roboto', sans-serif; text-shadow: none; color: #fff; border: 2px solid #fff; }
-        #highscore-list ol { list-style-type: none; padding-left: 0; }
-        #highscore-list li { display: flex; justify-content: space-between; padding: 0.5rem; border-bottom: 2px solid rgba(255,255,255,0.2); font-size: 1.1rem; }
-        #highscore-list li:last-child { border-bottom: none; }
-        #highscore-list .score-name { font-weight: bold; }
-        #highscore-list .score-points { color: #FEC00F; font-weight: bold; }
+      /* Container do Quiz */
+      .container {
+        background-color: rgba(0, 0, 0, 0.7);
+        border: 4px solid #000000;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 0 0 5px #ffffff, 0 0 0 10px #000000;
+        max-width: 800px;
+        width: 90%;
+        z-index: 10;
+        position: relative;
+      }
+
+      /* Botões */
+      .btn {
+        font-family: "Press Start 2P", cursive;
+        color: #ffffff;
+        cursor: pointer;
+        transition: all 0.1s ease-in-out;
+        border: 4px solid black;
+        padding: 15px;
+        border-radius: 8px;
+      }
+      .btn:hover {
+        filter: brightness(1.15);
+      }
+      .btn:active {
+        transform: translateY(3px);
+      }
+      .btn:disabled {
+        background-color: #888;
+        cursor: not-allowed;
+        filter: grayscale(1);
+      }
+      .btn-green {
+        background-color: #13b513;
+      }
+      .btn-yellow {
+        background-color: #fec00f;
+        color: #000;
+        text-shadow: none;
+      }
+      .btn-blue {
+        background-color: #4a90e2;
+      }
+
+      /* Botões de Resposta */
+      .answer-btn {
+        font-family: "Roboto", sans-serif;
+        font-weight: 700;
+        text-shadow: none;
+        color: #000000;
+        background-color: #d3823e;
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+        padding: 12px;
+      }
+      .answer-btn.correct {
+        background-color: #13b513;
+        color: #ffffff;
+      }
+      .answer-btn.wrong {
+        background-color: #e53935;
+        color: #ffffff;
+      }
+
+      .question-box {
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 4px solid #000;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 8px;
+      }
+
+      /* Formulário e Ranking */
+      #save-form input {
+        font-family: "Roboto", sans-serif;
+        color: #000;
+        padding: 10px;
+        border-radius: 4px;
+        border: 2px solid black;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto 1rem;
+      }
+      #highscore-list {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        padding: 1rem;
+        font-family: "Roboto", sans-serif;
+        text-shadow: none;
+        color: #fff;
+        border: 2px solid #fff;
+      }
+      #highscore-list ol {
+        list-style-type: none;
+        padding-left: 0;
+      }
+      #highscore-list li {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        font-size: 1.1rem;
+      }
+      #highscore-list li:last-child {
+        border-bottom: none;
+      }
+      #highscore-list .score-name {
+        font-weight: bold;
+      }
+      #highscore-list .score-points {
+        color: #fec00f;
+        font-weight: bold;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Elementos Decorativos -->
     <div class="castle"></div>
 
     <div class="container text-center">
-        <div id="start-screen">
-            <div class="mario-presenter"></div>
-            <h1 class="text-3xl md:text-4xl mb-4 mt-20">Mario DB World</h1>
-            <p class="mb-8 text-lg">Teste seus conhecimentos em Banco de Dados!</p>
-            <button id="start-btn" class="btn btn-green text-xl">Start Game</button>
+      <div id="start-screen">
+        <div class="mario-presenter"></div>
+        <h1 class="text-3xl md:text-4xl mb-4 mt-20">Mario DB World</h1>
+        <p class="mb-8 text-lg">Teste seus conhecimentos em Banco de Dados!</p>
+        <button id="start-btn" class="btn btn-green text-xl">Start Game</button>
+      </div>
+
+      <div id="quiz-screen" class="hidden">
+        <div class="mario-presenter"></div>
+        <div id="hud" class="flex justify-between items-center mb-4 text-lg">
+          <div id="question-counter"></div>
+          <div id="score"></div>
+        </div>
+        <div class="question-box">
+          <h2 id="question" class="text-lg md:text-xl mb-6"></h2>
+        </div>
+        <div
+          id="answer-buttons"
+          class="grid grid-cols-1 md:grid-cols-2 gap-4"
+        ></div>
+        <div class="mt-8 text-right">
+          <button id="next-btn" class="btn btn-yellow hidden">Próxima</button>
+        </div>
+      </div>
+
+      <div id="end-screen" class="hidden">
+        <div class="mario-presenter"></div>
+        <h2 class="text-3xl mb-4">Fim de Jogo!</h2>
+        <p id="final-score" class="text-2xl mb-6"></p>
+        <p id="end-message" class="text-lg mb-8"></p>
+
+        <form id="save-form" class="mb-4">
+          <input
+            type="text"
+            id="player-name"
+            placeholder="Digite seu nome para salvar"
+            required
+          />
+          <button type="submit" id="save-btn" class="btn btn-blue">
+            Salvar Pontuação
+          </button>
+        </form>
+        <p id="save-status" class="h-6"></p>
+
+        <div id="highscore-container" class="hidden mt-6">
+          <h3 class="text-2xl mb-4">Maiores Pontuações</h3>
+          <div id="highscore-list" class="text-left mx-auto max-w-md">
+            <p id="highscore-loading">Carregando...</p>
+          </div>
         </div>
 
-        <div id="quiz-screen" class="hidden">
-            <div class="mario-presenter"></div>
-            <div id="hud" class="flex justify-between items-center mb-4 text-lg">
-                <div id="question-counter"></div><div id="score"></div>
-            </div>
-            <div class="question-box"><h2 id="question" class="text-lg md:text-xl mb-6"></h2></div>
-            <div id="answer-buttons" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-            <div class="mt-8 text-right"><button id="next-btn" class="btn btn-yellow hidden">Próxima</button></div>
-        </div>
-
-        <div id="end-screen" class="hidden">
-            <div class="mario-presenter"></div>
-            <h2 class="text-3xl mb-4">Fim de Jogo!</h2>
-            <p id="final-score" class="text-2xl mb-6"></p>
-            <p id="end-message" class="text-lg mb-8"></p>
-            
-            <form id="save-form" class="mb-4">
-                <input type="text" id="player-name" placeholder="Digite seu nome para salvar" required>
-                <button type="submit" id="save-btn" class="btn btn-blue">Salvar Pontuação</button>
-            </form>
-            <p id="save-status" class="h-6"></p>
-
-            <div id="highscore-container" class="hidden mt-6">
-                <h3 class="text-2xl mb-4">Maiores Pontuações</h3>
-                <div id="highscore-list" class="text-left mx-auto max-w-md">
-                    <p id="highscore-loading">Carregando...</p>
-                </div>
-            </div>
-
-            <button id="restart-btn" class="btn btn-green text-xl mt-6 hidden">Jogar Novamente</button>
-        </div>
+        <button id="restart-btn" class="btn btn-green text-xl mt-6 hidden">
+          Jogar Novamente
+        </button>
+      </div>
     </div>
 
     <script>
-        // --- URL do seu Google Apps Script ---
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwxEd6Ckk_UZZbj0dD8TJ-puETQgic1vyUQqSni8-C53_xaxc-d9t8B2HEpaCMj3Dd_/exec'; 
+      // --- URL do seu Google Apps Script ---
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbwxEd6Ckk_UZZbj0dD8TJ-puETQgic1vyUQqSni8-C53_xaxc-d9t8B2HEpaCMj3Dd_/exec";
 
-        // --- Elementos do DOM ---
-        const startScreen = document.getElementById('start-screen'), quizScreen = document.getElementById('quiz-screen'), endScreen = document.getElementById('end-screen');
-        const startBtn = document.getElementById('start-btn'), nextBtn = document.getElementById('next-btn'), restartBtn = document.getElementById('restart-btn');
-        const questionElement = document.getElementById('question'), answerButtonsElement = document.getElementById('answer-buttons');
-        const questionCounterElement = document.getElementById('question-counter'), scoreElement = document.getElementById('score');
-        const finalScoreElement = document.getElementById('final-score'), endMessageElement = document.getElementById('end-message');
-        const saveForm = document.getElementById('save-form'), saveBtn = document.getElementById('save-btn'), playerNameInput = document.getElementById('player-name'), saveStatus = document.getElementById('save-status');
-        const highscoreContainer = document.getElementById('highscore-container'), highscoreList = document.getElementById('highscore-list'), highscoreLoading = document.getElementById('highscore-loading');
+      // --- Elementos do DOM ---
+      const startScreen = document.getElementById("start-screen"),
+        quizScreen = document.getElementById("quiz-screen"),
+        endScreen = document.getElementById("end-screen");
+      const startBtn = document.getElementById("start-btn"),
+        nextBtn = document.getElementById("next-btn"),
+        restartBtn = document.getElementById("restart-btn");
+      const questionElement = document.getElementById("question"),
+        answerButtonsElement = document.getElementById("answer-buttons");
+      const questionCounterElement =
+          document.getElementById("question-counter"),
+        scoreElement = document.getElementById("score");
+      const finalScoreElement = document.getElementById("final-score"),
+        endMessageElement = document.getElementById("end-message");
+      const saveForm = document.getElementById("save-form"),
+        saveBtn = document.getElementById("save-btn"),
+        playerNameInput = document.getElementById("player-name"),
+        saveStatus = document.getElementById("save-status");
+      const highscoreContainer = document.getElementById("highscore-container"),
+        highscoreList = document.getElementById("highscore-list"),
+        highscoreLoading = document.getElementById("highscore-loading");
 
-        const questions = [ { question: 'O que é uma Chave Primária (Primary Key)?', answers: [{ text: 'Um campo que armazena o nome da tabela.', correct: false }, { text: 'Um identificador único para cada registro.', correct: true }, { text: 'Uma chave para conectar múltiplas tabelas.', correct: false }, { text: 'O primeiro campo criado na tabela.', correct: false }] }, { question: 'Qual comando SQL seleciona dados de um banco?', answers: [{ text: 'GET', correct: false }, { text: 'OPEN', correct: false }, { text: 'SELECT', correct: true }, { text: 'EXTRACT', correct: false }] }, { question: 'Como tabelas se conectam em um modelo relacional?', answers: [{ text: 'Por cabos de rede.', correct: false }, { text: 'Usando Chaves Estrangeiras (Foreign Keys).', correct: true }, { text: 'Por terem nomes parecidos.', correct: false }, { text: 'Por um arquivo de configuração central.', correct: false }] }, { question: 'O que é um "Schema" de banco de dados?', answers: [{ text: 'O conjunto de cores da interface.', correct: false }, { text: 'Um backup completo dos dados.', correct: false }, { text: 'A estrutura lógica do banco de dados.', correct: true }, { text: 'Um tipo de consulta SQL.', correct: false }] }, { question: 'Qual NÃO é um tipo de dado comum em SQL?', answers: [{ text: 'INT', correct: false }, { text: 'VARCHAR', correct: false }, { text: 'BOOLEAN', correct: false }, { text: 'PIXEL', correct: true }] }, { question: 'O que a cláusula `WHERE` faz em um `SELECT`?', answers: [{ text: 'Ordena os resultados.', correct: false }, { text: 'Filtra os registros com base em uma condição.', correct: true }, { text: 'Agrupa os resultados.', correct: false }, { text: 'Define o nome da tabela.', correct: false }] }, { question: 'Qual `JOIN` retorna todos os registros da tabela da ESQUERDA?', answers: [{ text: 'INNER JOIN', correct: false }, { text: 'RIGHT JOIN', correct: false }, { text: 'LEFT JOIN', correct: true }, { text: 'FULL OUTER JOIN', correct: false }] }, { question: 'O que significa a sigla SQL?', answers: [{ text: 'Simple Query Language', correct: false }, { text: 'Structured Question Language', correct: false }, { text: 'Structured Query Language', correct: true }, { text: 'Standard Query Logic', correct: false }] } ];
-        let shuffledQuestions, currentQuestionIndex, score = 0;
+      const questions = [
+        {
+          question: "O que é uma Chave Primária (Primary Key)?",
+          answers: [
+            { text: "Um campo que armazena o nome da tabela.", correct: false },
+            {
+              text: "Um identificador único para cada registro.",
+              correct: true,
+            },
+            {
+              text: "Uma chave para conectar múltiplas tabelas.",
+              correct: false,
+            },
+            { text: "O primeiro campo criado na tabela.", correct: false },
+          ],
+        },
+        {
+          question: "Qual comando SQL seleciona dados de um banco?",
+          answers: [
+            { text: "GET", correct: false },
+            { text: "OPEN", correct: false },
+            { text: "SELECT", correct: true },
+            { text: "EXTRACT", correct: false },
+          ],
+        },
+        {
+          question: "Como tabelas se conectam em um modelo relacional?",
+          answers: [
+            { text: "Por cabos de rede.", correct: false },
+            {
+              text: "Usando Chaves Estrangeiras (Foreign Keys).",
+              correct: true,
+            },
+            { text: "Por terem nomes parecidos.", correct: false },
+            { text: "Por um arquivo de configuração central.", correct: false },
+          ],
+        },
+        {
+          question: 'O que é um "Schema" de banco de dados?',
+          answers: [
+            { text: "O conjunto de cores da interface.", correct: false },
+            { text: "Um backup completo dos dados.", correct: false },
+            { text: "A estrutura lógica do banco de dados.", correct: true },
+            { text: "Um tipo de consulta SQL.", correct: false },
+          ],
+        },
+        {
+          question: "Qual NÃO é um tipo de dado comum em SQL?",
+          answers: [
+            { text: "INT", correct: false },
+            { text: "VARCHAR", correct: false },
+            { text: "BOOLEAN", correct: false },
+            { text: "PIXEL", correct: true },
+          ],
+        },
+        {
+          question: "O que a cláusula `WHERE` faz em um `SELECT`?",
+          answers: [
+            { text: "Ordena os resultados.", correct: false },
+            {
+              text: "Filtra os registros com base em uma condição.",
+              correct: true,
+            },
+            { text: "Agrupa os resultados.", correct: false },
+            { text: "Define o nome da tabela.", correct: false },
+          ],
+        },
+        {
+          question:
+            "Qual `JOIN` retorna todos os registros da tabela da ESQUERDA?",
+          answers: [
+            { text: "INNER JOIN", correct: false },
+            { text: "RIGHT JOIN", correct: false },
+            { text: "LEFT JOIN", correct: true },
+            { text: "FULL OUTER JOIN", correct: false },
+          ],
+        },
+        {
+          question: "O que significa a sigla SQL?",
+          answers: [
+            { text: "Simple Query Language", correct: false },
+            { text: "Structured Question Language", correct: false },
+            { text: "Structured Query Language", correct: true },
+            { text: "Standard Query Logic", correct: false },
+          ],
+        },
+        {
+          question:
+            "Qual é a principal função de uma Chave Estrangeira (Foreign Key) em um banco de dados relacional?",
+          answers: [
+            {
+              text: "Garantir que cada registro em uma tabela seja único.",
+              correct: false,
+            },
+            {
+              text: "Estabelecer e impor um vínculo entre dados em duas tabelas.",
+              correct: true,
+            },
+            {
+              text: "Acelerar as consultas de busca (SELECT) na tabela.",
+              correct: false,
+            },
+            {
+              text: "Definir o tipo de dado que uma coluna pode armazenar.",
+              correct: false,
+            },
+          ],
+        },
+        {
+          question:
+            "Um relacionamento onde um registro de uma Tabela A pode se conectar a vários registros de uma Tabela B, mas um registro da Tabela B só pode se conectar a um da Tabela A, é chamado de:",
+          answers: [
+            { text: "Relacionamento 1 para 1 (1=1)", correct: false },
+            { text: "Relacionamento 1 para N (1=n)", correct: true },
+            { text: "Relacionamento N para N (n=n)", correct: false },
+            { text: "Relacionamento autorreferenciado", correct: false },
+          ],
+        },
+        {
+          question:
+            "Qual dos seguintes comandos SQL pertence à categoria DDL (Data Definition Language)?",
+          answers: [
+            { text: "INSERT INTO", correct: false },
+            { text: "UPDATE", correct: false },
+            { text: "CREATE TABLE", correct: true },
+            { text: "SELECT", correct: false },
+          ],
+        },
+        {
+          question:
+            "No contexto de um modelo de banco de dados, o que é um 'Modelo Conceitual'?",
+          answers: [
+            {
+              text: "O script SQL final para criar o banco de dados.",
+              correct: false,
+            },
+            {
+              text: "Um diagrama que mostra as tabelas, colunas e tipos de dados.",
+              correct: false,
+            },
+            {
+              text: "Uma representação de alto nível das principais entidades e seus relacionamentos.",
+              correct: true,
+            },
+            { text: "Um backup dos dados do banco.", correct: false },
+          ],
+        },
+        {
+          question:
+            "Qual comando DML (Data Manipulation Language) é usado para remover registros de uma tabela?",
+          answers: [
+            { text: "DROP TABLE", correct: false },
+            { text: "DELETE FROM", correct: true },
+            { text: "TRUNCATE TABLE", correct: false },
+            { text: "REMOVE FROM", correct: false },
+          ],
+        },
+        {
+          question:
+            "Para implementar um relacionamento N para N (muitos para muitos) entre duas tabelas (ex: Alunos e Cursos), o que é necessário?",
+          answers: [
+            {
+              text: "Uma única chave estrangeira na tabela Alunos.",
+              correct: false,
+            },
+            {
+              text: "Duas chaves estrangeiras em cada tabela, apontando uma para a outra.",
+              correct: false,
+            },
+            {
+              text: "Uma terceira tabela, chamada de tabela de junção ou associativa.",
+              correct: true,
+            },
+            {
+              text: "Nenhuma chave, os nomes dos alunos e cursos são suficientes.",
+              correct: false,
+            },
+          ],
+        },
+        {
+          question:
+            "Qual é a característica fundamental de uma Chave Primária (Primary Key)?",
+          answers: [
+            { text: "Deve ser sempre um número inteiro.", correct: false },
+            {
+              text: "Seu valor deve ser único e não pode ser NULO.",
+              correct: true,
+            },
+            { text: "Ela deve ter o nome 'ID' ou 'Codigo'.", correct: false },
+            {
+              text: "Ela só pode ser composta por uma única coluna.",
+              correct: false,
+            },
+          ],
+        },
+        {
+          question: "O comando `UPDATE` em SQL serve para:",
+          answers: [
+            { text: "Adicionar uma nova coluna a uma tabela.", correct: false },
+            {
+              text: "Modificar dados existentes em um ou mais registros.",
+              correct: true,
+            },
+            {
+              text: "Inserir novas linhas (registros) em uma tabela.",
+              correct: false,
+            },
+            {
+              text: "Consultar e visualizar os dados da tabela.",
+              correct: false,
+            },
+          ],
+        },
+        {
+          question:
+            "Um relacionamento 1 para 1 (1=1) entre duas tabelas é menos comum. Em qual situação ele poderia ser útil?",
+          answers: [
+            {
+              text: "Para registrar produtos e as várias categorias às quais eles pertencem.",
+              correct: false,
+            },
+            {
+              text: "Para conectar uma tabela de funcionários a outra tabela com dados confidenciais (como salário), acessível apenas por alguns usuários.",
+              correct: true,
+            },
+            {
+              text: "Para ligar uma tabela de autores a uma tabela de livros que eles escreveram.",
+              correct: false,
+            },
+            {
+              text: "Para registrar os itens de um pedido de venda.",
+              correct: false,
+            },
+          ],
+        },
+        {
+          question:
+            "Qual comando combina linhas de duas ou mais tabelas com base em uma coluna relacionada entre elas?",
+          answers: [
+            { text: "UNION", correct: false },
+            { text: "GROUP BY", correct: false },
+            { text: "JOIN", correct: true },
+            { text: "MERGE", correct: false },
+          ],
+        },
+      ];
+      let shuffledQuestions,
+        currentQuestionIndex,
+        score = 0;
 
-        function startGame() {
-            score = 0;
-            startScreen.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
-            endScreen.classList.add('hidden');
-            highscoreContainer.classList.add('hidden');
-            saveForm.classList.remove('hidden');
-            saveBtn.disabled = false;
-            restartBtn.classList.add('hidden');
-            saveStatus.innerText = '';
-            playerNameInput.value = '';
-            shuffledQuestions = questions.sort(() => Math.random() - 0.5);
-            currentQuestionIndex = 0;
-            scoreElement.innerText = `Score: ${score}`;
-            setNextQuestion();
+      function startGame() {
+        score = 0;
+        startScreen.classList.add("hidden");
+        quizScreen.classList.remove("hidden");
+        endScreen.classList.add("hidden");
+        highscoreContainer.classList.add("hidden");
+        saveForm.classList.remove("hidden");
+        saveBtn.disabled = false;
+        restartBtn.classList.add("hidden");
+        saveStatus.innerText = "";
+        playerNameInput.value = "";
+        shuffledQuestions = questions.sort(() => Math.random() - 0.5);
+        currentQuestionIndex = 0;
+        scoreElement.innerText = `Score: ${score}`;
+        setNextQuestion();
+      }
+
+      function setNextQuestion() {
+        resetState();
+        showQuestion(shuffledQuestions[currentQuestionIndex]);
+      }
+
+      function showQuestion(question) {
+        questionElement.innerText = question.question;
+        questionCounterElement.innerText = `Pergunta ${
+          currentQuestionIndex + 1
+        }/${questions.length}`;
+        question.answers.forEach((answer) => {
+          const button = document.createElement("button");
+          button.innerText = answer.text;
+          button.classList.add("btn", "answer-btn");
+          if (answer.correct) button.dataset.correct = answer.correct;
+          button.addEventListener("click", selectAnswer);
+          answerButtonsElement.appendChild(button);
+        });
+      }
+
+      function resetState() {
+        nextBtn.classList.add("hidden");
+        while (answerButtonsElement.firstChild)
+          answerButtonsElement.removeChild(answerButtonsElement.firstChild);
+      }
+
+      function selectAnswer(e) {
+        const selectedButton = e.target;
+        const correct = selectedButton.dataset.correct === "true";
+        if (correct) {
+          score += 125;
+          scoreElement.innerText = `Score: ${score}`;
+          selectedButton.classList.add("correct");
+        } else {
+          selectedButton.classList.add("wrong");
         }
-
-        function setNextQuestion() {
-            resetState();
-            showQuestion(shuffledQuestions[currentQuestionIndex]);
+        Array.from(answerButtonsElement.children).forEach((button) => {
+          button.disabled = true;
+          if (
+            button.dataset.correct === "true" &&
+            !button.classList.contains("correct")
+          )
+            button.classList.add("correct");
+        });
+        if (shuffledQuestions.length > currentQuestionIndex + 1) {
+          nextBtn.classList.remove("hidden");
+        } else {
+          setTimeout(showEndScreen, 1500);
         }
+      }
 
-        function showQuestion(question) {
-            questionElement.innerText = question.question;
-            questionCounterElement.innerText = `Pergunta ${currentQuestionIndex + 1}/${questions.length}`;
-            question.answers.forEach(answer => {
-                const button = document.createElement('button');
-                button.innerText = answer.text;
-                button.classList.add('btn', 'answer-btn');
-                if (answer.correct) button.dataset.correct = answer.correct;
-                button.addEventListener('click', selectAnswer);
-                answerButtonsElement.appendChild(button);
-            });
+      function showEndScreen() {
+        quizScreen.classList.add("hidden");
+        endScreen.classList.remove("hidden");
+        finalScoreElement.innerText = `Seu Score Final: ${score}`;
+        const percentage = (score / (questions.length * 125)) * 100;
+        if (percentage === 100)
+          endMessageElement.innerText =
+            "UAU! Pontuação perfeita! Você é um mestre dos DBs!";
+        else if (percentage >= 75)
+          endMessageElement.innerText =
+            "Excelente! Você conhece muito bem o assunto!";
+        else if (percentage >= 50)
+          endMessageElement.innerText =
+            "Bom trabalho! Continue estudando para dominar!";
+        else
+          endMessageElement.innerText =
+            "Não desanime! Cada erro é uma chance de aprender.";
+      }
+
+      function handleSaveScore(e) {
+        e.preventDefault();
+        if (playerNameInput.value.trim() === "") {
+          saveStatus.innerText = "Por favor, digite seu nome!";
+          return;
         }
+        saveBtn.disabled = true;
+        saveStatus.innerText = "Salvando...";
 
-        function resetState() {
-            nextBtn.classList.add('hidden');
-            while (answerButtonsElement.firstChild) answerButtonsElement.removeChild(answerButtonsElement.firstChild);
-        }
+        const dataToSave = { name: playerNameInput.value, score: score };
 
-        function selectAnswer(e) {
-            const selectedButton = e.target;
-            const correct = selectedButton.dataset.correct === 'true';
-            if (correct) {
-                score += 125;
-                scoreElement.innerText = `Score: ${score}`;
-                selectedButton.classList.add('correct');
-            } else {
-                selectedButton.classList.add('wrong');
-            }
-            Array.from(answerButtonsElement.children).forEach(button => {
-                button.disabled = true;
-                if (button.dataset.correct === 'true' && !button.classList.contains('correct')) button.classList.add('correct');
-            });
-            if (shuffledQuestions.length > currentQuestionIndex + 1) {
-                nextBtn.classList.remove('hidden');
-            } else {
-                setTimeout(showEndScreen, 1500);
-            }
-        }
-        
-        function showEndScreen() {
-            quizScreen.classList.add('hidden');
-            endScreen.classList.remove('hidden');
-            finalScoreElement.innerText = `Seu Score Final: ${score}`;
-            const percentage = (score / (questions.length * 125)) * 100;
-            if (percentage === 100) endMessageElement.innerText = 'UAU! Pontuação perfeita! Você é um mestre dos DBs!';
-            else if (percentage >= 75) endMessageElement.innerText = 'Excelente! Você conhece muito bem o assunto!';
-            else if (percentage >= 50) endMessageElement.innerText = 'Bom trabalho! Continue estudando para dominar!';
-            else endMessageElement.innerText = 'Não desanime! Cada erro é uma chance de aprender.';
-        }
-
-        function handleSaveScore(e) {
-            e.preventDefault();
-            if (playerNameInput.value.trim() === '') {
-                saveStatus.innerText = "Por favor, digite seu nome!";
-                return;
-            }
-            saveBtn.disabled = true;
-            saveStatus.innerText = "Salvando...";
-            
-            const dataToSave = { name: playerNameInput.value, score: score };
-
-            // **MUDANÇA IMPORTANTE AQUI**
-            // Removendo 'mode: no-cors' para obter um erro real no console.
-            fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors', // REMOVIDO TEMPORARIAMENTE PARA DEBUG
-                cache: 'no-cache',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                redirect: 'follow', // Adicionado para seguir redirecionamentos do Google
-                body: JSON.stringify(dataToSave)
-            })
-           /*  .then(response => {
+        // **MUDANÇA IMPORTANTE AQUI**
+        // Removendo 'mode: no-cors' para obter um erro real no console.
+        fetch(scriptURL, {
+          method: "POST",
+          mode: "no-cors", // REMOVIDO TEMPORARIAMENTE PARA DEBUG
+          cache: "no-cache",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          redirect: "follow", // Adicionado para seguir redirecionamentos do Google
+          body: JSON.stringify(dataToSave),
+        });
+        /*  .then(response => {
                 // Se a resposta não for OK, lança um erro para ser pego pelo .catch()
                 if (!response.ok) {
                     throw new Error(`Erro na resposta da rede: ${response.statusText}`);
@@ -294,49 +698,58 @@
                     throw new Error(data.error || 'Erro desconhecido no script.');
                 }
             }) */
-            /* .catch(error => {
+        /* .catch(error => {
                 // Este erro agora será muito mais específico!
                 saveStatus.innerText = "Erro ao salvar. Verifique o console.";
                 console.error('Erro detalhado ao salvar:', error);
                 saveBtn.disabled = false;
             }); */
-            fetchAndShowHighScores()
-        }
+        fetchAndShowHighScores();
+      }
 
-        function fetchAndShowHighScores() {
-            
-            highscoreContainer.classList.remove('hidden');
-            highscoreList.innerHTML = '<p id="highscore-loading">Carregando pontuações...</p>';
-            fetch(scriptURL)
-                .then(res => res.json())
-                .then(response => {
-                    if (response.result === 'success') {
-                        saveStatus.innerText = "";
-                        highscoreList.innerHTML = '';
-                        const sortedScores = response.data.sort((a, b) => b.score - a.score).slice(0, 5);
-                        const ol = document.createElement('ol');
-                        if (sortedScores.length === 0) {
-                            highscoreList.innerHTML = '<p>Nenhuma pontuação registrada ainda.</p>';
-                        } else {
-                            sortedScores.forEach(record => {
-                                const li = document.createElement('li');
-                                li.innerHTML = `<span class="score-name">${record.name}</span> <span class="score-points">${record.score} pts</span>`;
-                                ol.appendChild(li);
-                            });
-                            highscoreList.appendChild(ol);
-                        }
-                    } else { throw new Error(response.error); }
-                })
-                .catch(error => {
-                    console.error('Error fetching scores:', error);
-                    highscoreList.innerHTML = '<p>Não foi possível carregar as pontuações.</p>';
+      function fetchAndShowHighScores() {
+        highscoreContainer.classList.remove("hidden");
+        highscoreList.innerHTML =
+          '<p id="highscore-loading">Carregando pontuações...</p>';
+        fetch(scriptURL)
+          .then((res) => res.json())
+          .then((response) => {
+            if (response.result === "success") {
+              saveStatus.innerText = "";
+              highscoreList.innerHTML = "";
+              const sortedScores = response.data
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 5);
+              const ol = document.createElement("ol");
+              if (sortedScores.length === 0) {
+                highscoreList.innerHTML =
+                  "<p>Nenhuma pontuação registrada ainda.</p>";
+              } else {
+                sortedScores.forEach((record) => {
+                  const li = document.createElement("li");
+                  li.innerHTML = `<span class="score-name">${record.name}</span> <span class="score-points">${record.score} pts</span>`;
+                  ol.appendChild(li);
                 });
-        }
+                highscoreList.appendChild(ol);
+              }
+            } else {
+              throw new Error(response.error);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching scores:", error);
+            highscoreList.innerHTML =
+              "<p>Não foi possível carregar as pontuações.</p>";
+          });
+      }
 
-        startBtn.addEventListener('click', startGame);
-        nextBtn.addEventListener('click', () => { currentQuestionIndex++; setNextQuestion(); });
-        restartBtn.addEventListener('click', startGame);
-        saveForm.addEventListener('submit', handleSaveScore);
+      startBtn.addEventListener("click", startGame);
+      nextBtn.addEventListener("click", () => {
+        currentQuestionIndex++;
+        setNextQuestion();
+      });
+      restartBtn.addEventListener("click", startGame);
+      saveForm.addEventListener("submit", handleSaveScore);
     </script>
-</body>
+  </body>
 </html>
