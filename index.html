@@ -276,7 +276,7 @@
                 redirect: 'follow', // Adicionado para seguir redirecionamentos do Google
                 body: JSON.stringify(dataToSave)
             })
-            .then(response => {
+           /*  .then(response => {
                 // Se a resposta não for OK, lança um erro para ser pego pelo .catch()
                 if (!response.ok) {
                     throw new Error(`Erro na resposta da rede: ${response.statusText}`);
@@ -293,22 +293,25 @@
                 } else {
                     throw new Error(data.error || 'Erro desconhecido no script.');
                 }
-            })
-            .catch(error => {
+            }) */
+            /* .catch(error => {
                 // Este erro agora será muito mais específico!
                 saveStatus.innerText = "Erro ao salvar. Verifique o console.";
                 console.error('Erro detalhado ao salvar:', error);
                 saveBtn.disabled = false;
-            });
+            }); */
+            fetchAndShowHighScores()
         }
 
         function fetchAndShowHighScores() {
+            
             highscoreContainer.classList.remove('hidden');
             highscoreList.innerHTML = '<p id="highscore-loading">Carregando pontuações...</p>';
             fetch(scriptURL)
                 .then(res => res.json())
                 .then(response => {
                     if (response.result === 'success') {
+                        saveStatus.innerText = "";
                         highscoreList.innerHTML = '';
                         const sortedScores = response.data.sort((a, b) => b.score - a.score).slice(0, 5);
                         const ol = document.createElement('ol');
